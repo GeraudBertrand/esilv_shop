@@ -1,18 +1,20 @@
 import 'package:esilv_shop/models/product.dart';
-import 'package:flutter/foundation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class Cart extends ChangeNotifier {
-  final List<Product> _products = [];
-  List<Product> get products => _products;
+part 'cart.g.dart';
 
+@riverpod
+class Cart extends _$Cart {
+  @override
+  List<Product> build() {
+    return [];
+  }
 
   void add(Product product){
-    _products.add(product);
-    notifyListeners();
+    state = [...state, product];
   }
 
   void remove(Product product){
-    _products.remove(product);
-    notifyListeners();
+    state = state.where((elem) => elem.id != product.id).toList();
   }
 }
