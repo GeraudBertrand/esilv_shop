@@ -3,7 +3,6 @@ import 'package:esilv_shop/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/cart.dart';
 
@@ -43,7 +42,20 @@ class DetailProduct extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                ...List.generate(5, (index) {
+                  final fill = (product.rate - index).clamp(0.0, 1.0).toDouble();
+                  return buildStar(fill);
+                }),
+                const SizedBox(width: 6),
+                Text("${product.rate}/5"),
+              ],
+            )
+          ),
+          Padding(
+            padding: const EdgeInsets.all( 8.0),
             child: Row(
               children: [
                 Expanded(
@@ -61,10 +73,6 @@ class DetailProduct extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(product.description),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(product.category, style: Theme.of(context).textTheme.headlineSmall),
           ),
 
           if(ref.watch(cartProvider).any((p) => p.id == product.id))
@@ -88,7 +96,7 @@ class DetailProduct extends ConsumerWidget {
                     )
                   );
                 },
-                child: Text("Ajouter au panier"),
+                child: Text("Ajouter"),
               ),
             ),
           ),
@@ -97,4 +105,19 @@ class DetailProduct extends ConsumerWidget {
       )
     );
   }
+}
+
+Widget buildStar(double fillPercent) {
+  return Stack(
+    children: [
+      const Icon(Icons.star, color: Colors.grey, size: 20),
+      ClipRect(
+        child: Align(
+          alignment: Alignment.centerLeft,
+          widthFactor: fillPercent.clamp(0.0, 1.0), // Coupe l'étoile au % exact
+          child: const Icon(Icons.star, color: Colors.amber, size: 20),
+        ),
+      ),
+    ],
+  );
 }

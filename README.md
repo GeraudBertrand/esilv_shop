@@ -1,6 +1,6 @@
 # esilv_shop
 
-TD esilv flutter
+TD esilv flutter fait par Géraud BERTRAND.
 
 ## Getting Started
 

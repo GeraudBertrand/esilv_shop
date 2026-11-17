@@ -48,8 +48,8 @@ class EsilvShop extends StatelessWidget {
       ),
       GoRoute(
         path: '/cart',
-        builder: (context, state) => const CartPage()
-      )
+        builder: (context, state) => CartPage()
+      ),
     ]
   );
 

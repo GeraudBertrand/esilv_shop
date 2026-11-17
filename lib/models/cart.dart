@@ -17,4 +17,8 @@ class Cart extends _$Cart {
   void remove(Product product){
     state = state.where((elem) => elem.id != product.id).toList();
   }
+
+  String get priceInEuros =>
+      "${ (state.fold(0, (prv, actual) => prv + actual.price) / 100)
+      .toStringAsFixed(2)}€";
 }
