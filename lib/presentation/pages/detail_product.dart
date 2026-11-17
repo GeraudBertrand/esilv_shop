@@ -2,6 +2,9 @@
 import 'package:esilv_shop/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/cart.dart';
 
 class DetailProduct extends StatelessWidget {
   final Product product;
@@ -15,9 +18,16 @@ class DetailProduct extends StatelessWidget {
         title: Text(product.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () => context.go('/cart'),
-          )
+            icon: Badge.count(
+                count: context.watch<Cart>().products.length,
+                maxCount: 9,
+                child: Icon(Icons.shopping_cart_outlined)
+            ),
+            tooltip: 'Voir le panier',
+            onPressed: () {
+              context.push('/cart');
+            },
+          ),
         ],
       ),
       body: Column(
@@ -53,19 +63,35 @@ class DetailProduct extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(product.category),
+            child: Text(product.category, style: Theme.of(context).textTheme.headlineSmall),
           ),
-          Spacer(),
+
+          if(context.watch<Cart>().products.any((p) => p.id == product.id))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Chip(label : Text("Déjà dans le panier")),
+            )
+          ,
+          Spacer(flex: 5),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: FilledButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<Cart>().add(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Ajouté au panier !"),
+                      duration: Duration(seconds: 1),
+                    )
+                  );
+                },
                 child: Text("Ajouter au panier"),
               ),
             ),
           ),
+          Spacer(),
         ],
       )
     );

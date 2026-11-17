@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'app.dart';
+import 'models/cart.dart';
 
 void main() {
-  runApp(EsilvShop());
+  runApp(ChangeNotifierProvider(
+    create: (BuildContext context) => Cart(),
+    child: EsilvShop(),
+  ));
 }

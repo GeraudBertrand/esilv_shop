@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
+import '../../models/cart.dart';
 import '../../models/product.dart';
 
 class ListProduct extends StatelessWidget {
@@ -16,7 +18,11 @@ class ListProduct extends StatelessWidget {
         title: Text('appbarTitle'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon: Badge.count(
+              count: context.watch<Cart>().products.length,
+              maxCount: 9,
+              child: Icon(Icons.shopping_cart_outlined)
+            ),
             tooltip: 'Voir le panier',
             onPressed: () {
               context.push('/cart');
@@ -40,7 +46,7 @@ class ListProduct extends StatelessWidget {
                 ),
                 leading: Image.network(products[index].image, width: 80),
                 trailing: TextButton(
-                  onPressed: () {},
+                  onPressed: () => context.read<Cart>().add(products[index]),
                   child: Text("Ajouter".toUpperCase()),
                 ),
               ),
